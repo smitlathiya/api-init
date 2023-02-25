@@ -97,7 +97,6 @@ exports.signout = async (token) => {
         }
 
     } catch (error) {
-        console.log(error);
         return {
             type: "error",
             message: error,
@@ -116,10 +115,6 @@ exports.logginUserDetail = async (token) =>{
         token = token.replace("Bearer ", "")
 
         const tokenExist = await Token.findOne({token})
-
-        if (!tokenExist) {
-            throw "Please Login"
-        }
 
         const user = await User.findById(tokenExist.user_id)
 

@@ -1,4 +1,5 @@
 const {authService} = require('../services')
+const Token = require('../model/token')
 
 exports.signup = async (req, res) =>{
 
@@ -17,7 +18,6 @@ exports.signup = async (req, res) =>{
         user
     })
 }
-
 exports.signin = async (req, res) => {
 
     const {statusCode, type, message, token} = await authService.signin(req.body)
@@ -52,7 +52,6 @@ exports.signout = async (req, res) =>{
         message
     })
 }
-
 exports.logginUserDetail = async(req, res) =>{
     const {statusCode, type, message, user} = await authService.logginUserDetail(req.headers.authorization)
 
@@ -69,4 +68,27 @@ exports.logginUserDetail = async(req, res) =>{
         message,
         user
     })
+}
+exports.signinRequire = async(req, res, next) =>{
+    try {
+        if(!req.headers.authorization){
+            throw "Unauthorized"
+        }
+        const token = req.headers.authorization.replace("Bearer ", "")
+
+        const tokenExist = await Token.findOne({token})
+
+        if (!tokenExist) {
+            throw "Please Login"
+        }
+        
+        next()
+
+    } catch (error) {
+        return res.status(401).json({
+            type: "error",
+            message: error,
+        })
+    }
+    
 }
