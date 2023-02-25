@@ -1,7 +1,10 @@
-const {signup} = require('./auth')
+const {signup, signin, signout, logginUserDetail} = require('./auth')
 
 const authController = {
-    signup
+    signup,
+    signin,
+    signout,
+    logginUserDetail
 }
 
 module.exports = {
